@@ -1,0 +1,45 @@
+# Compiled files
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+.settings/
+.project
+.classpath
+
+# Native build artifacts
+*.dll
+*.so
+*.dylib
+*.exe
+*.obj
+*.pdb
+
+# Generated test files
+demo_*.dat
+demo_*.csv
+demo_*.txt
+demo_*.json
+demo_*.xml
+test_*.dat
+test_*.csv
+test_*.txt
+test_*.json
+benchmark_*.tmp
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
