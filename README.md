@@ -69,34 +69,14 @@ FastIO solves this with:
 
 ## Installation
 
-### Maven
-
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-
-<dependency>
-    <groupId>com.github.andrestubbe</groupId>
-    <artifactId>fastio</artifactId>
-    <version>v1.0.0</version>
-</dependency>
-```
-
-### Gradle
-
-```groovy
-repositories {
-    maven { url 'https://jitpack.io' }
-}
-
-dependencies {
-    implementation 'com.github.andrestubbe:fastio:v1.0.0'
-}
-```
+> **⚠️ Beta Status:** FastIO is currently in beta. The native library is not yet released.
+> 
+> Build from source for now:
+> ```bash
+> git clone https://github.com/andrestubbe/fastio.git
+> cd fastio
+> mvn compile
+> ```
 
 ---
 

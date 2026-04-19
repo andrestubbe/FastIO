@@ -43,3 +43,16 @@ desktop.ini
 
 # Logs
 *.log
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Release files (local only)
+RELEASE.txt
+RELEASEV*.md
+
+# TODO files (local only)
+TODO.md
