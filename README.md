@@ -187,30 +187,7 @@ text.close();
 
 ## Build from Source
 
-### Prerequisites
-
-1. **JDK 17+**
-2. **Apache Maven 3.8+**
-3. **Visual Studio 2019+** (with C++ workload)
-
-### Build
-
-```bash
-git clone https://github.com/andrestubbe/fastio.git
-cd fastio
-
-# Build Java + native DLL
-mvn clean compile
-
-# Run benchmarks
-mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
-
-# Run demo
-mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Demo"
-
-# Package
-mvn package
-```
+See [COMPILE.md](COMPILE.md) for detailed build instructions.
 
 ---
 
