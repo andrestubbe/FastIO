@@ -1,4 +1,4 @@
-# FastIO — Ultra-Fast Native File I/O for Java (5-20× Faster than NIO)
+# FastIO — Ultra-Fast Native File I/O for Java (5-20× Faster than NIO) [ALPHA]
 
 **⚡ High-performance file I/O library — 5-20× faster than java.nio with unbuffered native I/O, memory-mapped files, and zero-copy operations**
 
