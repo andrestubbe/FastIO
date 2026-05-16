@@ -1,4 +1,4 @@
-package io.github.andrestubbe.fastio;
+package fastio;
 
 /**
  * File open modes for FastFile operations.

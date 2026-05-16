@@ -1,4 +1,4 @@
-package io.github.andrestubbe.fastio;
+package fastio;
 
 /**
  * Supported file formats for optimized I/O operations.

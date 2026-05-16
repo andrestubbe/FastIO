@@ -1,4 +1,4 @@
-package io.github.andrestubbe.fastio;
+package fastio;
 
 /**
  * File metadata with format-specific information.

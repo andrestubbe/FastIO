@@ -1,5 +1,6 @@
-package io.github.andrestubbe.fastio;
+package fastio;
 
+import fastcore.FastCore;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -21,14 +22,26 @@ import java.nio.file.StandardOpenOption;
  *   <li>File format optimizations</li>
  * </ul>
  * 
- * @see FastFile
- * @see FastFileReader
- * @see FastFileWriter
+ * @author FastJava Team
+ * @version 1.0.0
  */
 public final class FastIO {
     
     private static volatile boolean initialized = false;
     private static volatile boolean nativeAvailable = false;
+    
+    /**
+     * Enables high-performance demo-specific optimizations.
+     * When active, certain safety checks and full spec compliance (like JSON/CSV escapes)
+     * are bypassed to achieve maximum speed for the demo agent.
+     */
+    public static boolean DEMO_MODE = false;
+    
+    static {
+        init();
+    }
+
+    private FastIO() {}
     
     /**
      * Check if native library is loaded and available.
@@ -39,69 +52,24 @@ public final class FastIO {
         return nativeAvailable;
     }
     
-    private FastIO() {}
-    
     /**
      * Initialize the native library.
-     * Must be called before using any FastIO operations.
      * Falls back to pure Java implementation if native library is not available.
      */
     public static synchronized void init() {
         if (initialized) return;
         
         try {
-            String libName = System.mapLibraryName("fastio");
-            String libPath = detectLibraryPath();
-            
-            if (libPath != null) {
-                System.load(libPath + "/" + libName);
-            } else {
-                System.loadLibrary("fastio");
-            }
-            
+            FastCore.loadLibrary("fastio", FastIO.class);
             nativeInit();
             nativeAvailable = true;
-        } catch (UnsatisfiedLinkError e) {
-            // Native library not available, use pure Java fallback
-            System.out.println("FastIO: Native library not found, using pure Java implementation");
+        } catch (UnsatisfiedLinkError | Exception e) {
+            System.err.println("FastIO: Native library failed to load.");
+            e.printStackTrace();
             nativeAvailable = false;
         }
         
         initialized = true;
-    }
-    
-    private static String detectLibraryPath() {
-        String os = System.getProperty("os.name").toLowerCase();
-        String arch = System.getProperty("os.arch").toLowerCase();
-        
-        String platform;
-        if (os.contains("win")) {
-            platform = "windows";
-        } else if (os.contains("linux")) {
-            platform = "linux";
-        } else if (os.contains("mac")) {
-            platform = "macos";
-        } else {
-            return null;
-        }
-        
-        String archDir = arch.contains("64") ? "x64" : "x86";
-        
-        // Look in standard locations
-        String[] searchPaths = {
-            "native/" + platform + "/" + archDir,
-            "src/main/resources/native/" + platform + "/" + archDir,
-            "target/native/" + platform + "/" + archDir
-        };
-        
-        for (String path : searchPaths) {
-            java.io.File dir = new java.io.File(path);
-            if (dir.exists() && dir.isDirectory()) {
-                return path;
-            }
-        }
-        
-        return null;
     }
     
     /**
@@ -113,7 +81,6 @@ public final class FastIO {
      * @throws IOException if the file cannot be opened
      */
     public static FastFile openRead(String path) throws IOException {
-        ensureInitialized();
         return new FastFile(path, OpenMode.READ);
     }
     
@@ -125,7 +92,6 @@ public final class FastIO {
      * @throws IOException if the file cannot be opened
      */
     public static FastFile openWrite(String path) throws IOException {
-        ensureInitialized();
         return new FastFile(path, OpenMode.WRITE);
     }
     
@@ -137,7 +103,6 @@ public final class FastIO {
      * @throws IOException if the file cannot be opened
      */
     public static FastFile openReadWrite(String path) throws IOException {
-        ensureInitialized();
         return new FastFile(path, OpenMode.READ_WRITE);
     }
     
@@ -150,7 +115,6 @@ public final class FastIO {
      * @throws IOException if mapping fails
      */
     public static ByteBuffer mapFile(String path, long size) throws IOException {
-        ensureInitialized();
         if (nativeAvailable) {
             return nativeMapFile(path, size);
         }
@@ -173,7 +137,6 @@ public final class FastIO {
      * @throws IOException if reading fails
      */
     public static ByteBuffer readAllBytes(String path) throws IOException {
-        ensureInitialized();
         if (nativeAvailable) {
             return nativeReadAllBytes(path);
         }
@@ -194,7 +157,6 @@ public final class FastIO {
      * @throws IOException if writing fails
      */
     public static void writeAllBytes(String path, ByteBuffer buffer) throws IOException {
-        ensureInitialized();
         if (nativeAvailable) {
             nativeWriteAllBytes(path, buffer);
             return;
@@ -215,7 +177,6 @@ public final class FastIO {
      * @return recommended buffer size in bytes
      */
     public static int getOptimalBufferSize() {
-        ensureInitialized();
         if (nativeAvailable) {
             return nativeGetOptimalBufferSize();
         }
@@ -232,7 +193,6 @@ public final class FastIO {
      * @throws IOException if copying fails
      */
     public static void fastCopy(String source, String target) throws IOException {
-        ensureInitialized();
         // Use Java NIO for now until native is implemented
         java.nio.file.Files.copy(
             java.nio.file.Paths.get(source), 
@@ -249,7 +209,6 @@ public final class FastIO {
      * @throws IOException if reading fails
      */
     public static String readText(String path) throws IOException {
-        ensureInitialized();
         ByteBuffer buffer = readAllBytes(path);
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
@@ -264,7 +223,6 @@ public final class FastIO {
      * @throws IOException if the file cannot be accessed
      */
     public static FastFileInfo getFileInfo(String path) throws IOException {
-        ensureInitialized();
         java.nio.file.Path p = java.nio.file.Paths.get(path);
         java.nio.file.attribute.BasicFileAttributes attrs = java.nio.file.Files.readAttributes(
             p, java.nio.file.attribute.BasicFileAttributes.class);
@@ -283,16 +241,61 @@ public final class FastIO {
         );
     }
     
-    private static void ensureInitialized() {
-        if (!initialized) {
-            init();
-        }
-    }
-    
     // Native methods (to be implemented with JNI)
     private static native void nativeInit();
     private static native ByteBuffer nativeMapFile(String path, long size);
     private static native ByteBuffer nativeReadAllBytes(String path);
     private static native void nativeWriteAllBytes(String path, ByteBuffer buffer);
     private static native int nativeGetOptimalBufferSize();
+    
+    // Low-level file handle operations
+    static native long nativeOpen(String path, int mode);
+    static native int nativeRead(long handle, ByteBuffer buffer, int position, int length);
+    static native int nativeWrite(long handle, ByteBuffer buffer, int position, int length);
+    static native void nativeClose(long handle);
+    static native long nativeSize(long handle);
+    static native void nativeSeek(long handle, long position);
+    
+    /**
+     * Fast-scan primitive for demo mode.
+     * Scans a Direct ByteBuffer for the first occurrence of a target byte.
+     * 
+     * @param buffer the direct buffer
+     * @param offset start offset
+     * @param length length to scan
+     * @param target the byte to find
+     * @return the relative index from offset, or -1 if not found
+     */
+    public static native int nativeScan(ByteBuffer buffer, int offset, int length, byte target);
+    
+    /**
+     * Counts occurrences of a target byte in a Direct ByteBuffer.
+     * High-performance alternative to manual looping.
+     * 
+     * @param buffer the direct buffer
+     * @param offset start offset
+     * @param length length to scan
+     * @param target the byte to count
+     * @return number of occurrences
+     */
+    public static native int nativeCount(ByteBuffer buffer, int offset, int length, byte target);
+    
+    /**
+     * Detects available CPU hardware acceleration features.
+     * 1: POPCNT, 2: AVX2, 4: AVX512, 8: BMI2
+     * 
+     * @return bitmask of features
+     */
+    public static native int nativeGetCPUFeatures();
+
+    /**
+     * High-performance SIMD search for a string pattern in a Direct ByteBuffer.
+     * 
+     * @param buffer the direct buffer
+     * @param offset start offset
+     * @param length length to scan
+     * @param pattern the bytes to find
+     * @return the relative index of the first match, or -1
+     */
+    public static native int nativeSearch(ByteBuffer buffer, int offset, int length, byte[] pattern);
 }

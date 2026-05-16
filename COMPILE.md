@@ -1,61 +1,66 @@
-# Building from Source
+# Building FastIO from Source
 
 ## Prerequisites
 
-- JDK 17+
-- Maven 3.9+
+- **JDK 17+** — [Download](https://adoptium.net/)
+- **Maven 3.9+** — [Download](https://maven.apache.org/download.cgi)
+- **Visual Studio 2022** — Community/Professional/Enterprise/BuildTools
 
-## Build
-
-```bash
-mvn clean package
-```
-
-## Run Demo
+## Quick Build
 
 ```bash
-mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Demo"
+# 1. Build native DLL first (Windows)
+compile.bat
+
+# 2. Build JAR
+mvn clean package -DskipTests
 ```
 
-## Run Benchmark
+## Build Commands
 
-```bash
-mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
+| Command | Purpose |
+|---------|---------|
+| `compile.bat` | Build native DLL (Windows) |
+| `mvn clean compile` | Compile Java only |
+| `mvn clean package` | Build FatJAR with DLL embedded |
+| `mvn test` | Run unit tests |
+
+## Native DLL Build
+
+The `compile.bat` script:
+- Auto-detects Visual Studio 2019/2022
+- Auto-detects JAVA_HOME
+- Uses `native\fastio.def` for JNI exports
+- Outputs to `build\fastio.dll`
+
+The Maven `pom.xml` will automatically pick up `build\fastio.dll` and bundle it inside the JAR.
+
+## JNI Exports (.def File)
+
+When using JNI, you MUST export your native functions in the `native\fastio.def` file:
+
+```def
+LIBRARY fastio
+EXPORTS
+    Java_io_github_andrestubbe_fastio_FastIO_nativeInit
+    Java_io_github_andrestubbe_fastio_FastIO_nativeMapFile
+    Java_io_github_andrestubbe_fastio_FastIO_nativeReadAllBytes
+    Java_io_github_andrestubbe_fastio_FastIO_nativeWriteAllBytes
+    Java_io_github_andrestubbe_fastio_FastIO_nativeGetOptimalBufferSize
 ```
 
-## Installation
+**Important:** Function names must match Java's expected format:
+- Pattern: `Java_packagename_Classname_methodname`
 
-### JitPack (Recommended)
+Without the `.def` file, JNI methods won't be exported and you'll get `UnsatisfiedLinkError`.
 
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
+## Troubleshooting
 
-<dependencies>
-    <dependency>
-        <groupId>com.github.andrestubbe</groupId>
-        <artifactId>fastio</artifactId>
-        <version>v1.0.0</version>
-    </dependency>
-</dependencies>
-```
+**"Cannot find DLL"** — Run `compile.bat` first
 
-### Gradle (JitPack)
+**"UnsatisfiedLinkError"** — Common causes:
+1. DLL built but not included in JAR (check `build/` folder).
+2. JNI exports missing — Verify `.def` file.
+3. Wrong function name — Must match `Java_package_Class_method` exactly.
 
-```groovy
-repositories {
-    maven { url 'https://jitpack.io' }
-}
-
-dependencies {
-    implementation 'com.github.andrestubbe:fastio:v1.0.0'
-}
-```
-
-## Download Pre-built JAR
-
-See [Releases Page](https://github.com/andrestubbe/FastIO/releases)
+**"Java version mismatch"** — Ensure JDK 17+ is installed and JAVA_HOME is set.

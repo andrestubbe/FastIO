@@ -1,0 +1,17 @@
+LIBRARY fastio
+EXPORTS
+    Java_fastio_FastIO_nativeInit
+    Java_fastio_FastIO_nativeMapFile
+    Java_fastio_FastIO_nativeReadAllBytes
+    Java_fastio_FastIO_nativeWriteAllBytes
+    Java_fastio_FastIO_nativeGetOptimalBufferSize
+    Java_fastio_FastIO_nativeOpen
+    Java_fastio_FastIO_nativeRead
+    Java_fastio_FastIO_nativeWrite
+    Java_fastio_FastIO_nativeClose
+    Java_fastio_FastIO_nativeSize
+    Java_fastio_FastIO_nativeSeek
+    Java_fastio_FastIO_nativeScan
+    Java_fastio_FastIO_nativeCount
+    Java_fastio_FastIO_nativeGetCPUFeatures
+    Java_fastio_FastIO_nativeSearch

@@ -73,7 +73,7 @@ extern "C" {
  * Initialize the native library
  */
 JNIEXPORT void JNICALL
-Java_io_github_andrestubbe_fastio_FastIO_nativeInit(JNIEnv* env, jclass clazz) {
+Java_fastio_FastIO_nativeInit(JNIEnv* env, jclass clazz) {
     GetSystemInfo(&g_systemInfo);
     g_optimalBufferSize = max(64 * 1024, (int)g_systemInfo.dwPageSize);
 }
@@ -82,7 +82,7 @@ Java_io_github_andrestubbe_fastio_FastIO_nativeInit(JNIEnv* env, jclass clazz) {
  * Memory map a file
  */
 JNIEXPORT jobject JNICALL
-Java_io_github_andrestubbe_fastio_FastIO_nativeMapFile(JNIEnv* env, jclass clazz, 
+Java_fastio_FastIO_nativeMapFile(JNIEnv* env, jclass clazz, 
                                                         jstring path, jlong size) {
     std::wstring wpath = jstringToWstring(env, path);
     
@@ -153,7 +153,7 @@ Java_io_github_andrestubbe_fastio_FastIO_nativeMapFile(JNIEnv* env, jclass clazz
  * Read entire file into a direct ByteBuffer
  */
 JNIEXPORT jobject JNICALL
-Java_io_github_andrestubbe_fastio_FastIO_nativeReadAllBytes(JNIEnv* env, jclass clazz,
+Java_fastio_FastIO_nativeReadAllBytes(JNIEnv* env, jclass clazz,
                                                               jstring path) {
     std::wstring wpath = jstringToWstring(env, path);
     
@@ -211,7 +211,7 @@ Java_io_github_andrestubbe_fastio_FastIO_nativeReadAllBytes(JNIEnv* env, jclass 
  * Write entire ByteBuffer to file using unbuffered I/O
  */
 JNIEXPORT void JNICALL
-Java_io_github_andrestubbe_fastio_FastIO_nativeWriteAllBytes(JNIEnv* env, jclass clazz,
+Java_fastio_FastIO_nativeWriteAllBytes(JNIEnv* env, jclass clazz,
                                                            jstring path, jobject buffer) {
     std::wstring wpath = jstringToWstring(env, path);
     
@@ -270,8 +270,191 @@ Java_io_github_andrestubbe_fastio_FastIO_nativeWriteAllBytes(JNIEnv* env, jclass
  * Get optimal buffer size for this system
  */
 JNIEXPORT jint JNICALL
-Java_io_github_andrestubbe_fastio_FastIO_nativeGetOptimalBufferSize(JNIEnv* env, jclass clazz) {
+Java_fastio_FastIO_nativeGetOptimalBufferSize(JNIEnv* env, jclass clazz) {
     return (jint)getOptimalBufferSize();
+}
+
+/**
+ * Low-level file operations
+ */
+JNIEXPORT jlong JNICALL
+Java_fastio_FastIO_nativeOpen(JNIEnv* env, jclass clazz, jstring path, jint mode) {
+    std::wstring wpath = jstringToWstring(env, path);
+    
+    DWORD access = 0;
+    DWORD share = FILE_SHARE_READ;
+    DWORD disposition = 0;
+    DWORD flags = FILE_ATTRIBUTE_NORMAL;
+
+    if (mode == 0) { // READ
+        access = GENERIC_READ;
+        disposition = OPEN_EXISTING;
+        flags |= FILE_FLAG_SEQUENTIAL_SCAN;
+    } else if (mode == 1) { // WRITE
+        access = GENERIC_WRITE;
+        disposition = CREATE_ALWAYS;
+        flags |= FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH;
+    } else { // READ_WRITE
+        access = GENERIC_READ | GENERIC_WRITE;
+        disposition = OPEN_ALWAYS;
+    }
+
+    HANDLE hFile = CreateFileW(wpath.c_str(), access, share, nullptr, disposition, flags, nullptr);
+    return (jlong)hFile;
+}
+
+JNIEXPORT jint JNICALL
+Java_fastio_FastIO_nativeRead(JNIEnv* env, jclass clazz, jlong handle, jobject buffer, jint position, jint length) {
+    HANDLE hFile = (HANDLE)handle;
+    void* bufferAddr = env->GetDirectBufferAddress(buffer);
+    if (!bufferAddr) return -1;
+
+    DWORD bytesRead = 0;
+    if (ReadFile(hFile, (BYTE*)bufferAddr + position, (DWORD)length, &bytesRead, nullptr)) {
+        return (jint)bytesRead;
+    }
+    return -1;
+}
+
+JNIEXPORT jint JNICALL
+Java_fastio_FastIO_nativeWrite(JNIEnv* env, jclass clazz, jlong handle, jobject buffer, jint position, jint length) {
+    HANDLE hFile = (HANDLE)handle;
+    void* bufferAddr = env->GetDirectBufferAddress(buffer);
+    if (!bufferAddr) return -1;
+
+    DWORD bytesWritten = 0;
+    if (WriteFile(hFile, (BYTE*)bufferAddr + position, (DWORD)length, &bytesWritten, nullptr)) {
+        return (jint)bytesWritten;
+    }
+    return -1;
+}
+
+JNIEXPORT void JNICALL
+Java_fastio_FastIO_nativeClose(JNIEnv* env, jclass clazz, jlong handle) {
+    CloseHandle((HANDLE)handle);
+}
+
+JNIEXPORT jlong JNICALL
+Java_fastio_FastIO_nativeSize(JNIEnv* env, jclass clazz, jlong handle) {
+    LARGE_INTEGER size;
+    if (GetFileSizeEx((HANDLE)handle, &size)) {
+        return (jlong)size.QuadPart;
+    }
+    return -1;
+}
+
+JNIEXPORT void JNICALL
+Java_fastio_FastIO_nativeSeek(JNIEnv* env, jclass clazz, jlong handle, jlong position) {
+    LARGE_INTEGER li;
+    li.QuadPart = position;
+    SetFilePointerEx((HANDLE)handle, li, nullptr, FILE_BEGIN);
+}
+
+JNIEXPORT jint JNICALL
+Java_fastio_FastIO_nativeScan(JNIEnv* env, jclass clazz, jobject buffer, jint offset, jint length, jbyte target) {
+    void* bufferAddr = env->GetDirectBufferAddress(buffer);
+    if (!bufferAddr) return -1;
+
+    const unsigned char* p = (const unsigned char*)bufferAddr + offset;
+    const unsigned char* found = (const unsigned char*)memchr(p, (int)target, (size_t)length);
+    
+    if (found) {
+        return (jint)(found - p);
+    }
+    return -1;
+}
+
+#include <intrin.h>
+#include <stdint.h>
+
+JNIEXPORT jint JNICALL
+Java_fastio_FastIO_nativeCount(JNIEnv* env, jclass clazz, jobject buffer, jint offset, jint length, jbyte target) {
+    void* bufferAddr = env->GetDirectBufferAddress(buffer);
+    if (!bufferAddr) return 0;
+
+    const unsigned char* p = (const unsigned char*)bufferAddr + offset;
+    const unsigned char* end = p + length;
+    int count = 0;
+
+    // Word-at-a-time scanning (Step 9: Micro-boost)
+    while (p < end && ((uintptr_t)p & 7)) {
+        if (*p++ == (unsigned char)target) count++;
+    }
+
+    if (p < end) {
+        const uint64_t* p64 = (const uint64_t*)p;
+        const uint64_t* end64 = (const uint64_t*)((uintptr_t)end & ~7);
+        uint64_t target64 = 0x0101010101010101ULL * (unsigned char)target;
+
+        while (p64 < end64) {
+            uint64_t word = *p64++;
+            uint64_t diff = word ^ target64;
+            // Detect zero bytes in diff (which are matches in word)
+            uint64_t match = (diff - 0x0101010101010101ULL) & ~diff & 0x8080808080808080ULL;
+            if (match) {
+                // Use hardware POPCNT to count bits. Since each match is 0x80, 
+                // each match is exactly one set bit.
+                count += (int)__popcnt64(match);
+            }
+        }
+        p = (const unsigned char*)end64;
+    }
+
+    while (p < end) {
+        if (*p++ == (unsigned char)target) count++;
+    }
+
+    return (jint)count;
+}
+
+JNIEXPORT jint JNICALL
+Java_fastio_FastIO_nativeGetCPUFeatures(JNIEnv* env, jclass clazz) {
+    int cpuInfo[4];
+    int features = 0;
+
+    // Check POPCNT (EAX=1, ECX bit 23)
+    __cpuid(cpuInfo, 1);
+    if (cpuInfo[2] & (1 << 23)) features |= 1;
+
+    // Check AVX2 (EAX=7, EBX bit 5)
+    __cpuid(cpuInfo, 7);
+    if (cpuInfo[1] & (1 << 5)) features |= 2;
+    
+    // Check BMI2 (EAX=7, EBX bit 8)
+    if (cpuInfo[1] & (1 << 8)) features |= 8;
+
+    return (jint)features;
+}
+
+JNIEXPORT jint JNICALL
+Java_fastio_FastIO_nativeSearch(JNIEnv* env, jclass clazz, jobject buffer, jint offset, jint length, jbyteArray pattern) {
+    void* bufferAddr = env->GetDirectBufferAddress(buffer);
+    if (!bufferAddr) return -1;
+
+    jsize patLen = env->GetArrayLength(pattern);
+    if (patLen == 0 || patLen > length) return -1;
+
+    jbyte* pat = env->GetByteArrayElements(pattern, nullptr);
+    const unsigned char* data = (const unsigned char*)bufferAddr + offset;
+    const unsigned char* end = data + length - patLen;
+    
+    jint result = -1;
+    unsigned char first = (unsigned char)pat[0];
+
+    // Optimized search using memchr to find first char, then memcmp
+    const unsigned char* p = data;
+    while (p <= end) {
+        p = (const unsigned char*)memchr(p, first, (size_t)(end - p + 1));
+        if (!p) break;
+        if (memcmp(p, pat, (size_t)patLen) == 0) {
+            result = (jint)(p - data);
+            break;
+        }
+        p++;
+    }
+
+    env->ReleaseByteArrayElements(pattern, pat, JNI_ABORT);
+    return result;
 }
 
 } // extern "C"
