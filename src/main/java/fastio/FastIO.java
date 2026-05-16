@@ -214,6 +214,33 @@ public final class FastIO {
         buffer.get(bytes);
         return new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
     }
+
+    /**
+     * Write bytes to a file.
+     * 
+     * @param path the file path
+     * @param bytes the data to write
+     * @throws IOException if writing fails
+     */
+    public static void writeBytes(String path, byte[] bytes) throws IOException {
+        try (FastFile file = new FastFile(path, OpenMode.WRITE)) {
+            file.write(bytes, 0, bytes.length);
+        }
+    }
+
+    /**
+     * Append bytes to a file.
+     * 
+     * @param path the file path
+     * @param bytes the data to append
+     * @throws IOException if writing fails
+     */
+    public static void appendBytes(String path, byte[] bytes) throws IOException {
+        try (FastFile file = new FastFile(path, OpenMode.READ_WRITE)) {
+            file.seek(file.size());
+            file.write(bytes, 0, bytes.length);
+        }
+    }
     
     /**
      * Get file information optimized for different formats.
