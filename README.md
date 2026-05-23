@@ -1,5 +1,4 @@
-# FastIO — Ultra-Fast Native File I/O for Java (5-20× Faster than NIO)
-
+# FastIO — Ultra-Fast Native File I/O for Java (5-20× Faster than NIO) [ALPHA] - v0.1.0
 **⚡ High-performance file I/O library — 5-20× faster than java.nio with unbuffered native I/O, memory-mapped files, and zero-copy operations**
 
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
@@ -194,13 +193,13 @@ See [COMPILE.md](COMPILE.md) for detailed build instructions.
 ## Run Benchmarks Yourself
 
 ```bash
-# Compare FastIO vs Java NIO
+# Compare FastIO vs Java NIO [ALPHA] - v0.1.0
 mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
 
-# Output example:
+# Output example: [ALPHA] - v0.1.0
 # [FastIO] Sequential Read 1GB: 1850 MB/s
 # [JavaNIO] Sequential Read 1GB: 870 MB/s
-# Speedup: 2.13×
+# Speedup: 2.13× [ALPHA] - v0.1.0
 ```
 
 ---
@@ -225,3 +224,4 @@ MIT License — free for commercial and private use.
 **Maximum throughput. Minimum latency. Zero bloat.** 🚀
 
 *Replace slow Java I/O with ultra-fast native performance!*
+
