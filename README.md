@@ -68,16 +68,43 @@ FastIO solves this with:
 
 ## Installation
 
-> **⚠️ Beta Status:** FastIO is currently in beta. The native library is not yet released.
-> 
-> Build from source for now:
-> ```bash
-> git clone https://github.com/andrestubbe/fastio.git
-> cd fastio
-> mvn compile
-> ```
+### Option 1: Maven (Recommended)
+Add the JitPack repository and the dependencies to your `pom.xml`:
 
----
+`xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <!-- FastIO Library -->
+    <dependency>
+        <groupId>com.github.andrestubbe</groupId>
+        <artifactId>fastio</artifactId>
+        <version>v0.1.0</version>
+    </dependency>
+</dependencies>
+`
+
+### Option 2: Gradle (via JitPack)
+`groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.andrestubbe:.1.0'
+}
+`
+
+### Option 3: Direct Download (No Build Tool)
+Download the latest JARs directly to add them to your classpath:
+
+1. 📦 **[fastio-v0.1.0.jar](https://github.com/andrestubbe/FastIO/releases/download/v0.1.0/fastio-v0.1.0.jar)** (The Core Library)
+
 
 ## Quick Start
 
