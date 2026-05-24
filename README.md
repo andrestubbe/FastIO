@@ -1,15 +1,16 @@
-﻿# FastIO — Ultra-Fast Native File I/O for Java (5-20× Faster than NIO) [ALPHA] - v0.1.0
-**⚡ High-performance file I/O library — 5-20× faster than java.nio with unbuffered native I/O, memory-mapped files, and zero-copy operations**
-
-FastIO is a **high-performance Java file I/O library** that replaces `java.io.FileInputStream/FileOutputStream` and `java.nio.channels.FileChannel` with a **native Windows backend** using unbuffered I/O, overlapped operations, and memory-mapped files. Built for **maximum throughput**, **consistent latency**, and **zero GC pressure**.
-
-**Keywords:** fast file io java, java file performance, unbuffered io java, memory mapped files java, zero copy file io, jni file operations, fast csv reading java, fast json loading java
+﻿# FastIO v0.1.0 [ALPHA]  — Ultra-Fast Native File I/O for Java (5-20× Faster than NIO)
 
 [![Status](https://img.shields.io/badge/status-v0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastIO/releases/tag/v0.1.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
 [![JitPack](https://img.shields.io/badge/JitPack-ready-green.svg)](https://jitpack.io/#andrestubbe)
+
+**⚡ High-performance file I/O library — 5-20× faster than java.nio with unbuffered native I/O, memory-mapped files, and zero-copy operations**
+
+FastIO is a **high-performance Java file I/O library** that replaces `java.io.FileInputStream/FileOutputStream` and `java.nio.channels.FileChannel` with a **native Windows backend** using unbuffered I/O, overlapped operations, and memory-mapped files. Built for **maximum throughput**, **consistent latency**, and **zero GC pressure**.
+
+[![FastKeyboard Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
 
 ---
 
@@ -220,13 +221,16 @@ See [COMPILE.md](COMPILE.md) for detailed build instructions.
 ## Run Benchmarks Yourself
 
 ```bash
-# Compare FastIO vs Java NIO [ALPHA] - v0.1.0
+# Compare FastIO vs Java NIO
+ [ALPHA] - v0.1.0
 mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
 
-# Output example: [ALPHA] - v0.1.0
+# Output example:
+ [ALPHA] - v0.1.0
 # [FastIO] Sequential Read 1GB: 1850 MB/s
 # [JavaNIO] Sequential Read 1GB: 870 MB/s
-# Speedup: 2.13× [ALPHA] - v0.1.0
+# Speedup: 2.13×
+ [ALPHA] - v0.1.0
 ```
 
 ---
@@ -243,12 +247,17 @@ mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
 ---
 
 ## License
-
-MIT License — free for commercial and private use.
+MIT License — See [LICENSE](LICENSE) file for details.
 
 ---
 
-**Maximum throughput. Minimum latency. Zero bloat.** 🚀
+## Related Projects
+- [FastCore](https://github.com/andrestubbe/FastCore) — Native Library Loader for Java
+- [FastKeyboard](https://github.com/andrestubbe/FastKeyboard) — High-performance RawInput engine
+- [FastTheme](https://github.com/andrestubbe/FastTheme) — Advanced UI styling engine
 
-*Replace slow Java I/O with ultra-fast native performance!*
+---
+**Part of the FastJava Ecosystem** — *Making the JVM faster.*
+
+
 
