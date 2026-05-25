@@ -6,12 +6,16 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
 [![JitPack](https://img.shields.io/badge/JitPack-ready-green.svg)](https://jitpack.io/#andrestubbe)
 
+---
+
 **⚡ High-performance file I/O library — 5-20× faster than java.nio with unbuffered native I/O, memory-mapped files, and
 zero-copy operations**
 
 FastIO is a **high-performance Java file I/O library** that replaces `java.io.FileInputStream/FileOutputStream` and
 `java.nio.channels.FileChannel` with a **native Windows backend** using unbuffered I/O, overlapped operations, and
 memory-mapped files. Built for **maximum throughput**, **consistent latency**, and **zero GC pressure**.
+
+---
 
 [![FastKeyboard Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
 
