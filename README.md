@@ -1,4 +1,4 @@
-ï»¿# FastIO v0.1.0 [ALPHA]  â€” Ultra-Fast Native File I/O for Java (5-20Ã— Faster than NIO)
+# FastIO v0.1.0 [ALPHA]  — Ultra-Fast Native File I/O for Java (5-20× Faster than NIO)
 
 [![Status](https://img.shields.io/badge/status-v0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastIO/releases/tag/v0.1.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -8,7 +8,7 @@
 
 ---
 
-**âš¡ High-performance file I/O library â€” 5-20Ã— faster than java.nio with unbuffered native I/O, memory-mapped files, and
+**? High-performance file I/O library — 5-20× faster than java.nio with unbuffered native I/O, memory-mapped files, and
 zero-copy operations**
 
 FastIO is a **high-performance Java file I/O library** that replaces `java.io.FileInputStream/FileOutputStream` and
@@ -35,17 +35,17 @@ memory-mapped files. Built for **maximum throughput**, **consistent latency**, a
 
 ## Why FastIO?
 
-`java.nio` is fast â€” but not as fast as the OS allows. Buffering overhead, GC pressure from heap allocations, and JVM
+`java.nio` is fast — but not as fast as the OS allows. Buffering overhead, GC pressure from heap allocations, and JVM
 abstraction layers limit throughput.
 
 FastIO solves this with:
 
-- **Unbuffered I/O** (`FILE_FLAG_NO_BUFFERING`) â€” bypass OS cache for consistent latency
-- **Memory-mapped files** â€” direct kernel-managed memory access
-- **Overlapped I/O** â€” true async operations without blocking threads
-- **Direct ByteBuffers** â€” zero-copy operations, no GC overhead
-- **Format optimizations** â€” specialized readers for CSV, JSON, text files
-- **Drop-in API** â€” familiar `FileInputStream`-style interface
+- **Unbuffered I/O** (`FILE_FLAG_NO_BUFFERING`) — bypass OS cache for consistent latency
+- **Memory-mapped files** — direct kernel-managed memory access
+- **Overlapped I/O** — true async operations without blocking threads
+- **Direct ByteBuffers** — zero-copy operations, no GC overhead
+- **Format optimizations** — specialized readers for CSV, JSON, text files
+- **Drop-in API** — familiar `FileInputStream`-style interface
 
 ---
 
@@ -53,14 +53,14 @@ FastIO solves this with:
 
 | Operation                    | Java NIO  | FastIO        | Speedup  |
 |------------------------------|-----------|---------------|----------|
-| **Sequential Read (1GB)**    | ~850 MB/s | **~1.8 GB/s** | **2.1Ã—** |
-| **Sequential Write (1GB)**   | ~720 MB/s | **~1.5 GB/s** | **2.1Ã—** |
-| **Random Read (4KB blocks)** | ~45 MB/s  | **~320 MB/s** | **7.1Ã—** |
-| **Memory-Mapped Read**       | ~900 MB/s | **~2.2 GB/s** | **2.4Ã—** |
-| **Small File Read (<1KB)**   | ~2.1 Î¼s   | **~0.4 Î¼s**   | **5.3Ã—** |
-| **CSV Parse (1M rows)**      | ~3.2s     | **~0.9s**     | **3.6Ã—** |
-| **JSON Load (100MB)**        | ~1.8s     | **~0.6s**     | **3.0Ã—** |
-| **Text File Scan**           | ~280 MB/s | **~1.1 GB/s** | **3.9Ã—** |
+| **Sequential Read (1GB)**    | ~850 MB/s | **~1.8 GB/s** | **2.1×** |
+| **Sequential Write (1GB)**   | ~720 MB/s | **~1.5 GB/s** | **2.1×** |
+| **Random Read (4KB blocks)** | ~45 MB/s  | **~320 MB/s** | **7.1×** |
+| **Memory-Mapped Read**       | ~900 MB/s | **~2.2 GB/s** | **2.4×** |
+| **Small File Read (<1KB)**   | ~2.1 µs   | **~0.4 µs**   | **5.3×** |
+| **CSV Parse (1M rows)**      | ~3.2s     | **~0.9s**     | **3.6×** |
+| **JSON Load (100MB)**        | ~1.8s     | **~0.6s**     | **3.0×** |
+| **Text File Scan**           | ~280 MB/s | **~1.1 GB/s** | **3.9×** |
 
 *Measured on Windows 11, NVMe SSD, Intel Core i7-12700K, Java 17*
 
@@ -69,10 +69,10 @@ FastIO solves this with:
 | Factor                | Java NIO                   | FastIO                     |
 |-----------------------|----------------------------|----------------------------|
 | **Buffering**         | Double-buffered (JVM + OS) | Unbuffered direct I/O      |
-| **Memory allocation** | Heap ByteBuffers â†’ GC      | Direct ByteBuffers â†’ reuse |
+| **Memory allocation** | Heap ByteBuffers ? GC      | Direct ByteBuffers ? reuse |
 | **System calls**      | Multiple per operation     | Batched, vectored I/O      |
 | **Thread blocking**   | Yes (synchronous)          | No (overlapped/async)      |
-| **Copy operations**   | Userâ†’kernelâ†’disk           | Direct memory mapping      |
+| **Copy operations**   | User?kernel?disk           | Direct memory mapping      |
 
 ---
 
@@ -117,7 +117,7 @@ dependencies {
 
 Download the latest JARs directly to add them to your classpath:
 
-1. ðŸ“¦ **[fastio-v0.1.0.jar](https://github.com/andrestubbe/FastIO/releases/download/v0.1.0/fastio-v0.1.0.jar)** (The Core
+1. ?? **[fastio-v0.1.0.jar](https://github.com/andrestubbe/FastIO/releases/download/v0.1.0/fastio-v0.1.0.jar)** (The Core
    Library)
 
 ## Quick Start
@@ -217,40 +217,40 @@ close();
 
 ### Core Classes
 
-#### `FastIO` â€” Static utility class
+#### `FastIO` — Static utility class
 
-- `FastIO.init()` â€” Initialize native library
-- `FastIO.openRead(path)` â€” Open file for reading
-- `FastIO.openWrite(path)` â€” Open file for writing
-- `FastIO.mapFile(path, size)` â€” Memory-map file
-- `FastIO.readAllBytes(path)` â€” Read entire file
-- `FastIO.fastCopy(source, target)` â€” Fast file copy
+- `FastIO.init()` — Initialize native library
+- `FastIO.openRead(path)` — Open file for reading
+- `FastIO.openWrite(path)` — Open file for writing
+- `FastIO.mapFile(path, size)` — Memory-map file
+- `FastIO.readAllBytes(path)` — Read entire file
+- `FastIO.fastCopy(source, target)` — Fast file copy
 
-#### `FastFile` â€” High-performance file handle
+#### `FastFile` — High-performance file handle
 
-- `read(ByteBuffer)` â€” Read into buffer
-- `write(ByteBuffer)` â€” Write from buffer
-- `seek(position)` â€” Random access
-- `size()` â€” Get file size
-- `sync()` â€” Force writes to disk
+- `read(ByteBuffer)` — Read into buffer
+- `write(ByteBuffer)` — Write from buffer
+- `seek(position)` — Random access
+- `size()` — Get file size
+- `sync()` — Force writes to disk
 
-#### `FastCSVReader` â€” Optimized CSV parser
+#### `FastCSVReader` — Optimized CSV parser
 
-- `nextRow()` â€” Advance to next row
-- `getString(col)`, `getInt(col)`, `getDouble(col)` â€” Column access
-- `getColumnCount()` â€” Row width
+- `nextRow()` — Advance to next row
+- `getString(col)`, `getInt(col)`, `getDouble(col)` — Column access
+- `getColumnCount()` — Row width
 
-#### `FastJSONReader` â€” Fast JSON loader
+#### `FastJSONReader` — Fast JSON loader
 
-- `readObject()` â€” Parse object
-- `readArray()` â€” Parse array
-- `get(path)` â€” Navigate with dot notation
+- `readObject()` — Parse object
+- `readArray()` — Parse array
+- `get(path)` — Navigate with dot notation
 
-#### `FastTextReader` â€” Fast text scanner
+#### `FastTextReader` — Fast text scanner
 
-- `readLine()` â€” Read next line
-- `setBufferSize(size)` â€” Tune for your workload
-- `setEncoding(enc)` â€” Auto-detect or specify
+- `readLine()` — Read next line
+- `setBufferSize(size)` — Tune for your workload
+- `setEncoding(enc)` — Auto-detect or specify
 
 ---
 
@@ -271,7 +271,7 @@ mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
  [ALPHA] - v0.1.0
 # [FastIO] Sequential Read 1GB: 1850 MB/s
 # [JavaNIO] Sequential Read 1GB: 870 MB/s
-# Speedup: 2.13Ã—
+# Speedup: 2.13×
  [ALPHA] - v0.1.0
 ```
 
@@ -281,7 +281,7 @@ mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
 
 * **[COMPILE.md](docs/COMPILE.md)**: Full compilation guide (MSVC C++17 build chain + JNI Setup).
 * **[REFERENCE.md](docs/REFERENCE.md)**: Full API descriptions, border configurations, and codepoint index.
-* **[PHILOSOPHIE.md](docs/PHILOSOPHIE.md)**: The engineering rationale for zero-allocation performance.
+* **[PHILOSOPHY.md](docs/PHILOSOPHY.md)**: The engineering rationale for zero-allocation performance.
 * **[ROADMAP.md](docs/ROADMAP.md)**: Future milestones and planned features.
 
 ---
@@ -290,27 +290,27 @@ mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
 
 | Platform      | Status            |
 |---------------|-------------------|
-| Windows 10/11 | âœ… Fully Supported |
-| Linux         | ðŸš§ Planned        |
-| macOS         | ðŸš§ Planned        |
+| Windows 10/11 | ? Fully Supported |
+| Linux         | ?? Planned        |
+| macOS         | ?? Planned        |
 
 ---
 
 ## License
 
-MIT License â€” See [LICENSE](LICENSE) file for details.
+MIT License — See [LICENSE](LICENSE) file for details.
 
 ---
 
 ## Related Projects
 
-- [FastCore](https://github.com/andrestubbe/FastCore) â€” Native Library Loader for Java
-- [FastKeyboard](https://github.com/andrestubbe/FastKeyboard) â€” High-performance RawInput engine
-- [FastTheme](https://github.com/andrestubbe/FastTheme) â€” Advanced UI styling engine
+- [FastCore](https://github.com/andrestubbe/FastCore) — Native Library Loader for Java
+- [FastKeyboard](https://github.com/andrestubbe/FastKeyboard) — High-performance RawInput engine
+- [FastTheme](https://github.com/andrestubbe/FastTheme) — Advanced UI styling engine
 
 ---
 
-**Part of the FastJava Ecosystem** â€” *Making the JVM faster. Small package. Maximum speed. Zero bloat. ðŸš€ðŸ“‹*
+**Part of the FastJava Ecosystem** — *Making the JVM faster. Small package. Maximum speed. Zero bloat. ????*
 
 
 
