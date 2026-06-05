@@ -1,6 +1,8 @@
-﻿@echo off
-echo ðŸš€ Running Hero Demo...
+@echo off
+chcp 65001 >nul
+cd /d "%~dp0"
+echo [FastIO] Running Demo (via JitPack)...
 cd examples\target
-call mvn -q compile exec:java -Dexec.mainClass=fastio.Demo
+call mvn compile exec:java -Dexec.mainClass=fastio.Demo
 cd ..\..
 pause
