@@ -118,6 +118,9 @@ Download the latest JARs directly to add them to your classpath:
 
 1. 📦 **[fastio-0.1.0.jar](https://github.com/andrestubbe/FastIO/releases/download/0.1.0/fastio-0.1.0.jar)** (The Core Library)
 
+> [!NOTE]
+> FastIO bundles its own native DLL loader — **FastCore is not required**.
+
 ## Quick Start
 
 ### Basic File Operations
