@@ -97,6 +97,13 @@ Add the JitPack repository and the dependencies to your `pom.xml`:
     <artifactId>fastio</artifactId>
     <version>0.1.0</version>
 </dependency>
+
+<!-- FastCore (Required Native Loader) -->
+<dependency>
+    <groupId>com.github.andrestubbe</groupId>
+    <artifactId>FastCore</artifactId>
+    <version>0.1.0</version>
+</dependency>
 </dependencies>
 ```
 
@@ -109,6 +116,7 @@ repositories {
 
 dependencies {
     implementation 'com.github.andrestubbe:fastio:0.1.0'
+    implementation 'com.github.andrestubbe:FastCore:0.1.0'
 }
 ```
 
@@ -117,9 +125,7 @@ dependencies {
 Download the latest JARs directly to add them to your classpath:
 
 1. 📦 **[fastio-0.1.0.jar](https://github.com/andrestubbe/FastIO/releases/download/0.1.0/fastio-0.1.0.jar)** (The Core Library)
-
-> [!NOTE]
-> FastIO bundles its own native DLL loader — **FastCore is not required**.
+2. ⚙️ **[fastcore-0.1.0.jar](https://github.com/andrestubbe/FastCore/releases/download/0.1.0/fastcore-0.1.0.jar)** (The Mandatory Native Loader)
 
 ## Quick Start
 
