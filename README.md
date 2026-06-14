@@ -8,8 +8,7 @@
 
 ---
 
-**âš¡ High-performance file I/O library  5-20 faster than java.nio with unbuffered native I/O, memory-mapped files, and
-zero-copy operations**
+**⚡ High-performance file I/O library — 5-20× faster than java.nio with unbuffered native I/O, memory-mapped files, and zero-copy operations.**
 
 FastIO is a **high-performance Java file I/O library** that replaces `java.io.FileInputStream/FileOutputStream` and
 `java.nio.channels.FileChannel` with a **native Windows backend** using unbuffered I/O, overlapped operations, and
@@ -69,10 +68,10 @@ FastIO solves this with:
 | Factor                | Java NIO                   | FastIO                     |
 |-----------------------|----------------------------|----------------------------|
 | **Buffering**         | Double-buffered (JVM + OS) | Unbuffered direct I/O      |
-| **Memory allocation** | Heap ByteBuffers ? GC      | Direct ByteBuffers ? reuse |
+| **Memory allocation** | Heap ByteBuffers ➡️ GC      | Direct ByteBuffers ➡️ reuse |
 | **System calls**      | Multiple per operation     | Batched, vectored I/O      |
 | **Thread blocking**   | Yes (synchronous)          | No (overlapped/async)      |
-| **Copy operations**   | User?kernel?disk           | Direct memory mapping      |
+| **Copy operations**   | User ➡️ kernel ➡️ disk       | Direct memory mapping      |
 
 ---
 
@@ -117,8 +116,7 @@ dependencies {
 
 Download the latest JARs directly to add them to your classpath:
 
-1. ðŸš€ **[fastio-0.1.0.jar](https://github.com/andrestubbe/FastIO/releases/download/0.1.0/fastio-0.1.0.jar)** (The Core
-   Library)
+1. 📦 **[fastio-0.1.0.jar](https://github.com/andrestubbe/FastIO/releases/download/0.1.0/fastio-0.1.0.jar)** (The Core Library)
 
 ## Quick Start
 
@@ -139,20 +137,12 @@ ByteBuffer mapped = FastIO.mapFile("hugefile.dat", 0); // 0 = entire file
 // Fast sequential read
 FastFile file = FastIO.openRead("data.csv");
 ByteBuffer buffer = FastFile.allocateAlignedBuffer(64 * 1024); // 64KB aligned
-while(file.
-
-read(buffer) >0){
-        buffer.
-
-flip();
-// Process data
-    buffer.
-
-clear();
+while (file.read(buffer) > 0) {
+    buffer.flip();
+    // Process data
+    buffer.clear();
 }
-        file.
-
-close();
+file.close();
 ```
 
 ### Fast CSV Reading
@@ -160,23 +150,15 @@ close();
 ```java
 // Optimized CSV parser with zero-allocation reads
 FastCSVReader csv = new FastCSVReader("data.csv");
-csv.
+csv.setDelimiter(',');
+csv.setHasHeader(true);
 
-setDelimiter(',');
-csv.
-
-setHasHeader(true);
-
-while(csv.
-
-nextRow()){
-String name = csv.getString(0);
-int age = csv.getInt(1);
-double score = csv.getDouble(2);
+while (csv.nextRow()) {
+    String name = csv.getString(0);
+    int age = csv.getInt(1);
+    double score = csv.getDouble(2);
 }
-        csv.
-
-close();
+csv.close();
 ```
 
 ### Fast JSON Loading
@@ -186,9 +168,7 @@ close();
 FastJSONReader json = new FastJSONReader("config.json");
 JsonObject obj = json.readObject();
 String value = obj.getString("key");
-json.
-
-close();
+json.close();
 ```
 
 ### Text File Scanning
@@ -196,19 +176,13 @@ close();
 ```java
 // Ultra-fast line-by-line reading
 FastTextReader text = new FastTextReader("log.txt");
-text.
-
-setBufferSize(256*1024); // 256KB buffer for speed
+text.setBufferSize(256*1024); // 256KB buffer for speed
 
 String line;
-while((line =text.
-
-readLine())!=null){
-        // Process line
-        }
-        text.
-
-close();
+while ((line = text.readLine()) != null) {
+    // Process line
+}
+text.close();
 ```
 
 ---
@@ -264,15 +238,12 @@ See [COMPILE.md](docs/COMPILE.md) for detailed build instructions.
 
 ```bash
 # Compare FastIO vs Java NIO
- [ALPHA] - 0.1.0
 mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
 
 # Output example:
- [ALPHA] - 0.1.0
 # [FastIO] Sequential Read 1GB: 1850 MB/s
 # [JavaNIO] Sequential Read 1GB: 870 MB/s
 # Speedup: 2.13
- [ALPHA] - 0.1.0
 ```
 
 ---
@@ -290,9 +261,9 @@ mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
 
 | Platform      | Status            |
 |---------------|-------------------|
-| Windows 10/11 | ? Fully Supported |
-| Linux         | ðŸš€ Planned        |
-| macOS         | ðŸš€ Planned        |
+| Windows 10/11 | ✅ Fully Supported |
+| Linux         | 🔗 Planned        |
+| macOS         | 🔗 Planned        |
 
 ---
 
@@ -310,7 +281,7 @@ MIT License  See [LICENSE](LICENSE) file for details.
 
 ---
 
-**Part of the FastJava Ecosystem**  *Making the JVM faster. Small package. Maximum speed. Zero bloat. ðŸš€ðŸš€*
+**Part of the FastJava Ecosystem** — *Making the JVM faster. Small package. Maximum speed. Zero bloat. 🚀📋*
 
 
 
