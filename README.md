@@ -1,4 +1,4 @@
-# FastIO 0.1.0 [ALPHA-2026-06] — Ultra-Fast Native File I/O for Java (5-20 Faster than NIO)
+# FastIO 0.1.0 [ALPHA-2026-06] â€” ï¿½ Ultra-Fast Native File I/O for Java (5-20 Faster than NIO)
 
 [![Status](https://img.shields.io/badge/status-0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastIO/releases/tag/0.1.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
