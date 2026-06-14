@@ -1,29 +1,29 @@
-# The Philosophy of FastXXX
+# The Philosophy of FastIO
 
 > [!IMPORTANT]
 > **"Keine Kopien. Niemals. Kritischer JNI-Pfad. Native-First Performance."**
 
-FastXXX is built on the principle that modern Java applications require **native-first** acceleration for performance-critical operations that the standard JVM APIs don't fully optimize.
+FastIO is built on the principle that modern Java applications are fundamentally bottlenecked by the I/O layer. The standard `java.nio` API, while powerful, is limited by JVM buffering, heap allocations, and OS abstraction overhead. FastIO removes these layers entirely.
 
 ## Core Tenets
 
 1.  **Native-First Execution**
-    Bypass standard Java layers to reach the physical limits of the hardware using hand-tuned C++ and SIMD intrinsics.
+    Bypass the JVM I/O stack entirely. Use Windows `CreateFile`, `ReadFile`, `WriteFile`, and `MapViewOfFile` directly via JNI for maximum throughput.
 
-2.  **Zero-Copy JNI Architecture**
-    Minimize JNI transition costs by using direct memory access patterns and avoiding implicit memory copies between the JVM and the native layer.
+2.  **Unbuffered Direct I/O**
+    `FILE_FLAG_NO_BUFFERING` eliminates the OS page cache double-copy. Data flows directly from NVMe storage to application memory in a single pass.
 
-3.  **Deterministic Latency**
-    Eliminate variance caused by JIT warm-up or garbage collection stalls in critical hot-paths.
+3.  **Zero-Copy Architecture**
+    All read/write paths use `DirectByteBuffer` — data never touches the Java heap. No GC pressure, no copy overhead, no JVM allocation.
 
-4.  **Hardware-Aware Optimization**
-    Leverage modern CPU features (AVX, SSE, NEON) to process data at hardware-native speeds.
+4.  **Deterministic Latency**
+    Overlapped I/O (`FILE_FLAG_OVERLAPPED`) enables true async operations without blocking threads — critical for high-throughput pipelines.
 
 5.  **Blueprint Consistency**
-    As part of the **FastJava** ecosystem, FastXXX adheres to a standardized architecture:
-    *   **Native Backend**: Direct C++ implementation.
+    As part of the **FastJava** ecosystem, FastIO adheres to the standardized architecture:
+    *   **Native Backend**: Direct C++ implementation via JNI.
     *   **Unified Loading**: Powered by `FastCore`.
     *   **Premium Quality**: Built for high-performance systems and autonomous agents.
 
 ---
-**⚡ FastXXX — Powering the next generation of Native Java.**
+**⚡ FastIO — Pushing Java file I/O to the physical limits of NVMe storage.**

@@ -1,61 +1,57 @@
-# Building from Source
+# Building FastIO from Source
 
 ## Prerequisites
 
-- JDK 17+
-- Maven 3.9+
+- **JDK 17+** — [Download](https://adoptium.net/)
+- **Maven 3.9+** — [Download](https://maven.apache.org/download.cgi)
+- **Visual Studio 2022** — Community/Professional/Enterprise/BuildTools
 
-## Build
-
-```bash
-mvn clean package
-```
-
-## Run Demo
+## Quick Build
 
 ```bash
-mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Demo"
+# 1. Build native DLL first (Windows)
+compile.bat
+
+# 2. Build JAR
+mvn clean package -DskipTests
 ```
 
-## Run Benchmark
+## Build Commands
 
-```bash
-mvn exec:java -Dexec.mainClass="io.github.andrestubbe.fastio.Benchmark"
+| Command | Purpose |
+|---------|---------|
+| `compile.bat` | Build native DLL (Windows) |
+| `mvn clean compile` | Compile Java only |
+| `mvn clean package` | Build JAR with DLL embedded |
+| `mvn test` | Run unit tests |
+
+## Native DLL Build
+
+The `compile.bat` script:
+- Auto-detects Visual Studio 2019/2022
+- Auto-detects JAVA_HOME
+- Compiles `src/main/native/fastio.cpp`
+- Outputs to `build/fastio.dll`
+
+The Maven `pom.xml` automatically picks up `build/fastio.dll` and bundles it inside the JAR.
+
+## Native Source Location
+
+Unlike the _BluePrint default, FastIO stores its native C++ source in the Maven-standard path:
+
+```
+src/main/native/fastio.cpp   ← C++ JNI implementation
+src/main/native/build.bat    ← Local build script
+build/fastio.dll             ← Compiled output (bundled in JAR)
 ```
 
-## Installation
+## Troubleshooting
 
-### JitPack (Recommended)
+**"Cannot find DLL"** — Run `compile.bat` first
 
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
+**"UnsatisfiedLinkError"** — Common causes:
+1. DLL built but not included in JAR (check `build/` folder).
+2. Wrong function name — Must match `Java_package_Class_method` exactly.
+3. FastCore not on classpath — required for DLL extraction.
 
-<dependencies>
-    <dependency>
-        <groupId>com.github.andrestubbe</groupId>
-        <artifactId>fastio</artifactId>
-        <version>v1.0.0</version>
-    </dependency>
-</dependencies>
-```
-
-### Gradle (JitPack)
-
-```groovy
-repositories {
-    maven { url 'https://jitpack.io' }
-}
-
-dependencies {
-    implementation 'com.github.andrestubbe:fastio:v1.0.0'
-}
-```
-
-## Download Pre-built JAR
-
-See [Releases Page](https://github.com/andrestubbe/FastIO/releases)
+**"Java version mismatch"** — Ensure JDK 17+ is installed and JAVA_HOME is set.
