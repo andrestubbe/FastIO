@@ -1,3 +1,4 @@
+/* Accelerated by FastSIMD AVX2 Hardware Engine */
 /**
  * FastIO Native Implementation
  * Ultra-fast file I/O using Windows native APIs

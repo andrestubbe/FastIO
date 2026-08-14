@@ -1,8 +1,14 @@
 @echo off
-chcp 65001 >nul
-cd /d "%~dp0"
-echo [FastIO] Running Demo (via JitPack)...
-cd examples\target
-call mvn compile exec:java -Dexec.mainClass=fastio.Demo
+echo [FastIO] Building Native Library...
+call compile.bat
+if %ERRORLEVEL% NEQ 0 exit /b 1
+
+echo [FastIO] Building Core Project...
+call mvn clean install -DskipTests -q
+if %ERRORLEVEL% NEQ 0 exit /b 1
+
+echo [FastIO] Running Demo...
+cd examples\Demo
+call mvn compile exec:java -DskipTests
 cd ..\..
 pause

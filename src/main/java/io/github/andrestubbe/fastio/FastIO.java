@@ -50,21 +50,19 @@ public final class FastIO {
         if (initialized) return;
         
         try {
-            String libName = System.mapLibraryName("fastio");
-            String libPath = detectLibraryPath();
-            
-            if (libPath != null) {
-                System.load(libPath + "/" + libName);
-            } else {
-                System.loadLibrary("fastio");
-            }
-            
+            com.github.andrestubbe.fastcore.FastCore.loadLibrary("fastio");
             nativeInit();
             nativeAvailable = true;
-        } catch (UnsatisfiedLinkError e) {
-            // Native library not available, use pure Java fallback
-            System.out.println("FastIO: Native library not found, using pure Java implementation");
-            nativeAvailable = false;
+        } catch (Throwable e) {
+            // Try standard loadLibrary as fallback
+            try {
+                System.loadLibrary("fastio");
+                nativeInit();
+                nativeAvailable = true;
+            } catch (Throwable ex) {
+                System.out.println("FastIO: Native library not found, using pure Java implementation");
+                nativeAvailable = false;
+            }
         }
         
         initialized = true;
