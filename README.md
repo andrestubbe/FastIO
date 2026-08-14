@@ -12,7 +12,7 @@
 
 FastIO is a **high-performance Java file I/O library** that replaces `java.io.FileInputStream/FileOutputStream` and `java.nio.channels.FileChannel` with a **native Windows backend** using SIMD-accelerated scanning, unbuffered I/O, overlapped operations, and memory-mapped files. Built for **maximum throughput**, **consistent latency**, and **zero GC pressure**.
 
-![docs/screenshot.png](docs/screenshot.png)
+![Showcase](https://raw.githubusercontent.com/andrestubbe/FastIO/main/docs/screenshot.png)
 
 ---
 
