@@ -50,55 +50,59 @@ public final class FastIO {
         if (initialized) return;
         
         try {
-            com.github.andrestubbe.fastcore.FastCore.loadLibrary("fastio");
+            String libPath = detectLibraryPath();
+            if (libPath != null) {
+                System.load(new java.io.File(libPath, System.mapLibraryName("fastio")).getAbsolutePath());
+            } else {
+                System.loadLibrary("fastio");
+            }
             nativeInit();
             nativeAvailable = true;
         } catch (Throwable e) {
-            // Try standard loadLibrary as fallback
-            try {
-                System.loadLibrary("fastio");
-                nativeInit();
-                nativeAvailable = true;
-            } catch (Throwable ex) {
-                System.out.println("FastIO: Native library not found, using pure Java implementation");
-                nativeAvailable = false;
-            }
+            System.out.println("FastIO: Native library not found, using pure Java implementation");
+            nativeAvailable = false;
         }
         
         initialized = true;
     }
     
     private static String detectLibraryPath() {
-        String os = System.getProperty("os.name").toLowerCase();
-        String arch = System.getProperty("os.arch").toLowerCase();
-        
-        String platform;
-        if (os.contains("win")) {
-            platform = "windows";
-        } else if (os.contains("linux")) {
-            platform = "linux";
-        } else if (os.contains("mac")) {
-            platform = "macos";
-        } else {
-            return null;
-        }
-        
-        String archDir = arch.contains("64") ? "x64" : "x86";
-        
-        // Look in standard locations
+        String libName = System.mapLibraryName("fastio");
         String[] searchPaths = {
-            "native/" + platform + "/" + archDir,
-            "src/main/resources/native/" + platform + "/" + archDir,
-            "target/native/" + platform + "/" + archDir
+            "build",
+            "../build",
+            "../../build",
+            "src/main/resources/native",
+            "../src/main/resources/native",
+            "../../src/main/resources/native",
+            "src/main/resources/win32-x86-64",
+            "target/classes/native",
+            "../../target/classes/native"
         };
         
         for (String path : searchPaths) {
-            java.io.File dir = new java.io.File(path);
-            if (dir.exists() && dir.isDirectory()) {
-                return path;
+            java.io.File file = new java.io.File(path, libName);
+            if (file.exists()) {
+                return file.getParent();
             }
         }
         
+        // Resource extraction
+        try {
+            java.io.InputStream in = FastIO.class.getResourceAsStream("/native/" + libName);
+            if (in == null) {
+                in = FastIO.class.getResourceAsStream("/win32-x86-64/" + libName);
+            }
+            if (in != null) {
+                java.io.File tempFile = java.io.File.createTempFile("fastio_", "_" + libName);
+                tempFile.deleteOnExit();
+                try (java.io.OutputStream out = new java.io.FileOutputStream(tempFile)) {
+                    in.transferTo(out);
+                }
+                return tempFile.getParent();
+            }
+        } catch (Throwable ignored) {}
+
         return null;
     }
     

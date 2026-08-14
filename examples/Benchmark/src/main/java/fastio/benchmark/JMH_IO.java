@@ -1,6 +1,7 @@
 package fastio.benchmark;
 
 import io.github.andrestubbe.fastio.FastIO;
+import io.github.andrestubbe.fastio.FastFile;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.File;
@@ -18,6 +19,8 @@ public class JMH_IO {
 
     private File tempFile;
 
+    private java.nio.ByteBuffer buffer;
+
     @Setup
     public void setup() throws Exception {
         tempFile = File.createTempFile("fastio_test", ".txt");
@@ -27,11 +30,15 @@ public class JMH_IO {
                 fos.write("123,456.789,item_name_sample,2026-08-14,active\n".getBytes());
             }
         }
+        buffer = FastFile.allocateAlignedBuffer((int) tempFile.length() + 4096);
     }
 
     @Benchmark
-    public Object benchmarkFastIONativeRead() {
-        return FastIO.readFile(tempFile.getAbsolutePath());
+    public int benchmarkFastIONativeRead() throws Exception {
+        buffer.clear();
+        try (FastFile file = FastIO.openRead(tempFile.getAbsolutePath())) {
+            return file.read(buffer);
+        }
     }
 
     @Benchmark
