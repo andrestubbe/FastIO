@@ -16,6 +16,34 @@ FastIO is a **high-performance Java file I/O library** that replaces `java.io.Fi
 
 ---
 
+
+---
+
+## Quick Start — Example
+
+```java
+import io.github.andrestubbe.fastio.*;
+import java.nio.ByteBuffer;
+
+public class Demo {
+    public static void main(String[] args) throws Exception {
+        // 1. Initialize native library
+        FastIO.init();
+
+        // 2. Fast unbuffered read into aligned direct buffer
+        try (FastFile file = FastIO.openRead("data.bin")) {
+            ByteBuffer buffer = FastFile.allocateAlignedBuffer(64 * 1024);
+            while (file.read(buffer) > 0) {
+                buffer.flip();
+                // Process buffer
+                buffer.clear();
+            }
+        }
+    }
+}
+```
+
+
 ---
 
 ## Table of Contents
@@ -91,31 +119,6 @@ In the official [JMH Benchmark](examples/Benchmark), `FastIO` measured throughpu
 | **[`FastMemory`](https://github.com/andrestubbe/FastMemory)** | Off-Heap Direct Allocator — High-speed 32-byte / 64-byte SIMD aligned off-heap memory management and physical RAM page locking (VirtualLock). |
 | **[`FastSIMD`](https://github.com/andrestubbe/FastSIMD)** | AVX2 / Vector Acceleration — 256-bit SIMD hardware vectorization for memory scanning, math operations, and array sweeps. |
 | **[`FastBytes`](https://github.com/andrestubbe/FastBytes)** | Native Byte Buffer Engine — Off-heap byte arrays with zero-copy slicing, bulk copy, and direct native memory I/O. |
-
-
-## Quick Start — Example
-
-```java
-import io.github.andrestubbe.fastio.*;
-import java.nio.ByteBuffer;
-
-public class Demo {
-    public static void main(String[] args) throws Exception {
-        // 1. Initialize native library
-        FastIO.init();
-
-        // 2. Fast unbuffered read into aligned direct buffer
-        try (FastFile file = FastIO.openRead("data.bin")) {
-            ByteBuffer buffer = FastFile.allocateAlignedBuffer(64 * 1024);
-            while (file.read(buffer) > 0) {
-                buffer.flip();
-                // Process buffer
-                buffer.clear();
-            }
-        }
-    }
-}
-```
 
 ---
 
