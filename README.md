@@ -16,9 +16,6 @@ FastIO is a **high-performance Java file I/O library** that replaces `java.io.Fi
 
 ---
 
-
----
-
 ## Quick Start — Example
 
 ```java
