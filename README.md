@@ -50,6 +50,7 @@ public class Demo {
 - [Real-World Use Cases](#real-world-use-cases)
 - [Performance Benchmarks](#performance-benchmarks)
 - [API Reference](#api-reference)
+- [Technical Demos & Benchmarks](#technical-demos--benchmarks)
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Platform Support](#platform-support)
@@ -153,6 +154,17 @@ In the official [JMH Benchmark](examples/Benchmark), `FastIO` measured throughpu
 
 ---
 
+## Technical Demos & Benchmarks
+
+Run standalone verification demos or execute JMH throughput microbenchmarks:
+
+| Type | Target / Launcher | Source File | Description |
+|:---|:---|:---|:---|
+| **Interactive Demo** | [`run-demo.bat`](run-demo.bat) | [`Demo.java`](src/main/java/io/github/andrestubbe/fastio/Demo.java) | End-to-end demonstration of FastIO unbuffered reading, memory-mapped channels, and SIMD scanners |
+| **Throughput Benchmark** | [`run-benchmark.bat`](run-benchmark.bat) | [`Benchmark.java`](examples/Benchmark/src/main/java/io/github/andrestubbe/fastio/benchmark/Benchmark.java) | Full JMH microbenchmark suite measuring unbuffered NVMe read/write, memory mapping, and SIMD parsing throughput |
+
+---
+
 ## Installation
 
 ### Option 1: Maven (Recommended)
@@ -235,11 +247,11 @@ dependencies {
 
 ## Platform Support
 
-| Platform | Status |
-|----------|--------|
-| Windows 10/11 (x64) | ✅ Fully Supported |
-| Linux | 🔄 Planned |
-| macOS | 🔄 Planned |
+| Platform | Architecture | Status | Notes |
+|:---|:---|:---|:---|
+| **Windows 10 / 11 / Server** | `x86_64` | ✅ Fully Supported | Win32 unbuffered file I/O & SIMD line scan |
+| **Linux (Kernel 5.4+)** | `x86_64` | 🔄 Planned | Direct I/O (`O_DIRECT`) & `io_uring` |
+| **macOS (Sonoma+)** | `Apple Silicon` | 🔄 Planned | Native POSIX unbuffered I/O |
 
 ---
 
